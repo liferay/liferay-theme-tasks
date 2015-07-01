@@ -41,7 +41,7 @@ describe('Build Tasks', function() {
 	});
 
 	after(function() {
-		//fs.removeSync(tempPath);
+		fs.removeSync(tempPath);
 
 		process.chdir(this._initCwd);
 	});
