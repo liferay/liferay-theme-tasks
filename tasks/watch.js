@@ -96,24 +96,21 @@ module.exports = function(options) {
 
 		if (staticFileDirs.indexOf(rootDir) > -1) {
 			taskArray = ['deploy:file'];
-		}
-		else if (rootDir === 'WEB-INF') {
+		} else if (rootDir === 'WEB-INF') {
 			taskArray = [
 				'build:clean',
 				'build:src',
 				'build:web-inf',
 				'deploy:folder',
 			];
-		}
-		else if (rootDir === 'templates') {
+		} else if (rootDir === 'templates') {
 			taskArray = [
 				'build:src',
 				'build:themelet-src',
 				'build:themelet-js-inject',
 				'deploy:folder',
 			];
-		}
-		else if (rootDir === 'css') {
+		} else if (rootDir === 'css') {
 			taskArray = [
 				'build:clean',
 				'build:base',

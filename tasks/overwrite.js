@@ -114,8 +114,7 @@ module.exports = function(options) {
 			function(answers) {
 				if (answers.file.dir) {
 					promptFiles(answers.file.path, cb);
-				}
-				else {
+				} else {
 					logChanges(answers.file.path);
 
 					gulp
@@ -134,8 +133,7 @@ module.exports = function(options) {
 
 		try {
 			files = fs.readdirSync(dirPath);
-		}
-		catch (err) {}
+		} catch (err) {}
 
 		return files;
 	}

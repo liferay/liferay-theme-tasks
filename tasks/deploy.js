@@ -34,8 +34,7 @@ module.exports = function(options) {
 
 		if (argv.l || argv.live) {
 			sequence.splice(1, 1, 'deploy-live:war');
-		}
-		else if (webBundleDir === 'watching') {
+		} else if (webBundleDir === 'watching') {
 			sequence.splice(2, 0, 'watch:teardown');
 		}
 

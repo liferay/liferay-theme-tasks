@@ -156,8 +156,7 @@ module.exports = function(options) {
 			.on('end', function() {
 				if (renamedFiles && renamedFiles.length) {
 					del(renamedFiles, cb);
-				}
-				else {
+				} else {
 					cb();
 				}
 			});
@@ -181,8 +180,7 @@ module.exports = function(options) {
 	gulp.task('build:fix-url-functions', function(cb) {
 		if (themeConfig.rubySass) {
 			cb();
-		}
-		else {
+		} else {
 			gulp
 				.src(pathBuild + '/_css/**/*.css')
 				.pipe(
@@ -372,8 +370,7 @@ module.exports = function(options) {
 			gutil.log(err);
 
 			this.emit('end');
-		}
-		else {
+		} else {
 			throw err;
 		}
 	}
@@ -394,8 +391,7 @@ function getBaseThemeDependencies(baseThemePath, dependencies) {
 		dependencies.push(path.resolve(baseThemePath, 'src/**/*'));
 
 		return getBaseThemeDependencies(baseThemePath, dependencies);
-	}
-	else if (baseTheme === 'styled' || baseTheme === 'classic') {
+	} else if (baseTheme === 'styled' || baseTheme === 'classic') {
 		dependencies.splice(
 			1,
 			0,
@@ -431,11 +427,9 @@ function getBaseThemeGlob(templateLanguage) {
 
 	if (templateLanguage === STR_FTL) {
 		templateLanguage = STR_VM;
-	}
-	else if (templateLanguage === STR_VM) {
+	} else if (templateLanguage === STR_VM) {
 		templateLanguage = STR_FTL;
-	}
-	else {
+	} else {
 		return glob + ')';
 	}
 
@@ -465,8 +459,7 @@ function getSassIncludePaths(rubySass) {
 function getSassOptions(sassOptions, defaults) {
 	if (_.isFunction(sassOptions)) {
 		sassOptions = sassOptions(defaults);
-	}
-	else {
+	} else {
 		sassOptions = _.assign(defaults, sassOptions);
 	}
 

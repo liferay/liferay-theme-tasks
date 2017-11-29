@@ -33,8 +33,7 @@ module.exports = function(options) {
 
 				if (answers.modulePath) {
 					themeSrcPath = answers.modulePath;
-				}
-				else if (answers.module) {
+				} else if (answers.module) {
 					tempNodeModulesPath = path.join(
 						process.cwd(),
 						'.temp_node_modules'
@@ -64,13 +63,11 @@ module.exports = function(options) {
 						.on('end', function() {
 							if (tempNodeModulesPath) {
 								del([tempNodeModulesPath], cb);
-							}
-							else {
+							} else {
 								cb();
 							}
 						});
-				}
-				else {
+				} else {
 					gutil.log(gutil.colors.yellow('Theme not selected'));
 
 					cb();

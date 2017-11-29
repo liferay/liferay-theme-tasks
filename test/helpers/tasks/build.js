@@ -52,8 +52,7 @@ _.assign(helper, {
 									defaults.loadPath,
 									'assert default sassOptions'
 								);
-							}
-							else {
+							} else {
 								assert(
 									defaults.includePaths,
 									'assert default sassOptions'
@@ -193,8 +192,7 @@ _.assign(helper, {
 				path.join(cssPath, 'main.css'),
 				/@import\surl\(custom\.css\);/
 			);
-		}
-		else {
+		} else {
 			assert.fileContentMatch(
 				path.join(cssPath, 'main.css'),
 				/@import\surl\(file\.css\?t=[0-9]+\);/

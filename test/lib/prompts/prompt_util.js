@@ -118,8 +118,7 @@ test('getModuleChoices should get module choices that are appropriate for extend
 
 		if (number == 1) {
 			t.true(item.checked);
-		}
-		else {
+		} else {
 			t.true(!item.checked);
 		}
 

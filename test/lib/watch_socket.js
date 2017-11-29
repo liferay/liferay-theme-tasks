@@ -149,8 +149,7 @@ test('_formatWebBundleDirCommand should properly format install command based on
 			command,
 			'install webbundledir:file:///Users/themes/base-theme/.web_bundle_dir?Web-ContextPath=/base-theme'
 		);
-	}
-	else {
+	} else {
 		t.is(
 			command,
 			'install webbundledir:file:/c:/Users/themes/base-theme/.web_bundle_dir?Web-ContextPath=/base-theme'

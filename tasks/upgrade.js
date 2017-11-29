@@ -51,14 +51,12 @@ module.exports = function(options) {
 						gutil.log(err);
 
 						runSequence('upgrade:revert-src', cb);
-					}
-					else {
+					} else {
 						cb();
 					}
 				});
 			});
-		}
-		else {
+		} else {
 			throw new gutil.PluginError(
 				'gulp-theme-upgrader',
 				chalk.red('Version specific upgrade task must return function.')
@@ -94,14 +92,12 @@ module.exports = function(options) {
 				function(answers) {
 					if (answers.backup) {
 						backup();
-					}
-					else {
+					} else {
 						cb();
 					}
 				}
 			);
-		}
-		else {
+		} else {
 			backup();
 		}
 	});
@@ -130,8 +126,7 @@ module.exports = function(options) {
 			function(answers) {
 				if (answers.revert) {
 					runSequence('upgrade:revert-src', cb);
-				}
-				else {
+				} else {
 					gutil.log(chalk.cyan('No files reverted.'));
 
 					cb();

@@ -107,8 +107,7 @@ test.cb('watch task should start watch socket', function(t) {
 			helper.close(function() {
 				t.end();
 			});
-		}
-		catch (e) {
+		} catch (e) {
 			t.end();
 		}
 	};

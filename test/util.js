@@ -39,8 +39,7 @@ PrototypeMethodSpy.prototype.add = function(parent, methodName, stub) {
 
 	if (stub) {
 		parent[methodName] = sinon.stub();
-	}
-	else {
+	} else {
 		parent[methodName] = sinon.spy();
 	}
 
@@ -141,8 +140,7 @@ function cleanTempTheme(themeName, version, component, cb) {
 
 			cb();
 		}, 100);
-	}
-	else {
+	} else {
 		cleanDirectory(tempPath);
 	}
 }
