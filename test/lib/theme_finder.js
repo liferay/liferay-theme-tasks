@@ -90,7 +90,7 @@ test.cb(
 	}
 );
 
-test.failing(
+test.cb(
 	'getLiferayThemeModules should return an object when searching for npm modules',
 	function(t) {
 		themeFinder.getLiferayThemeModules(
