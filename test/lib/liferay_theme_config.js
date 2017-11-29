@@ -36,6 +36,8 @@ test.after(function() {
 test('getConfig should get only liferayTheme namespaced properties from package.json if `all` parameter is false', function(
 	t
 ) {
+	t.plan(0);
+
 	let themeConfig = lfrThemeConfig.getConfig();
 
 	assert.isDefined(themeConfig.baseTheme);
@@ -51,6 +53,8 @@ test('getConfig should get only liferayTheme namespaced properties from package.
 });
 
 test('removeConfig should remove dependencies from package.json', function(t) {
+	t.plan(0);
+
 	lfrThemeConfig.removeConfig(['rubySass']);
 
 	let liferayTheme = lfrThemeConfig.getConfig();
@@ -58,7 +62,11 @@ test('removeConfig should remove dependencies from package.json', function(t) {
 	assert.isUndefined(liferayTheme.rubySass);
 });
 
-test('removeDependencies should remove dependencies from package.json', function() {
+test('removeDependencies should remove dependencies from package.json', function(
+	t
+) {
+	t.plan(0);
+
 	lfrThemeConfig.removeDependencies(['test-themelet']);
 
 	let packageJSON = lfrThemeConfig.getConfig(true);
@@ -71,6 +79,8 @@ test('removeDependencies should remove dependencies from package.json', function
 test('setConfig should replace old themelet dependencies with new dependencies', function(
 	t
 ) {
+	t.plan(0);
+
 	lfrThemeConfig.setConfig({
 		themeletDependencies: {
 			'fake-themelet': {
@@ -93,6 +103,8 @@ test('setConfig should replace old themelet dependencies with new dependencies',
 test('setConfig should add new npm dependencies without removing previously added dependencies', function(
 	t
 ) {
+	t.plan(0);
+
 	lfrThemeConfig.setDependencies({
 		'fake-module': '*',
 	});
@@ -107,6 +119,8 @@ test('setConfig should add new npm dependencies without removing previously adde
 test('setConfig should add to devDependencies and leave dependencies alone', function(
 	t
 ) {
+	t.plan(0);
+
 	let originalPackageJSON = lfrThemeConfig.getConfig(true);
 
 	let newDependencies = {

@@ -140,6 +140,8 @@ test('_onResponseData should set deployed property based on response data', func
 test('_onResponseEnd should log appropriate message based on deployed status', function(
 	t
 ) {
+	t.plan(0);
+
 	let warDeployer = new WarDeployer({
 		fileName: 'test',
 	});
@@ -164,6 +166,8 @@ test('_onResponseEnd should log appropriate message based on deployed status', f
 test('_promptCredentialsIfNeeded should prompt user if password or username is not specified', function(
 	t
 ) {
+	t.plan(0);
+
 	let warDeployer = new WarDeployer({
 		fileName: 'test',
 		password: 'test',
@@ -188,6 +192,8 @@ test('_promptCredentialsIfNeeded should prompt user if password or username is n
 test('_promptCredentialsIfNeeded should immediately invoke _makeRequest if password and username are specified', function(
 	t
 ) {
+	t.plan(0);
+
 	var warDeployer = new WarDeployer({
 		fileName: 'test',
 		username: 'test',

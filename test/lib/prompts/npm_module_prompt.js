@@ -91,6 +91,8 @@ test('_afterPrompt should pass answers to done property', function(t) {
 test('_afterPromptSearchTerms should invoke _getNPMModules with searchTerms', function(
 	t
 ) {
+	t.plan(0);
+
 	prototype._getNPMModules = sinon.spy();
 
 	let answers = {

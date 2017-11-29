@@ -168,6 +168,8 @@ test('_getModuleChoices should invoke proptUtil.getModulesChoices', function(
 });
 
 test('_prompt should bind correct functions to prompt question', function(t) {
+	t.plan(0);
+
 	let promptSpy = prototypeMethodSpy.add(inquirer, 'prompt');
 
 	let assertAfterPrompt = assertBoundFunction(prototype, '_afterPrompt');
