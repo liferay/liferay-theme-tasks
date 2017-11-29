@@ -4,5 +4,5 @@ before_install:
     - gem install compass
 node_js:
     - "8.4"
-    - "6.11"
+    - "6.12"
     - "node"
