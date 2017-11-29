@@ -11,10 +11,12 @@
     "theme"
   ],
   "scripts": {
+    "checkFormat": "npm run prettier --list-different",
+    "format": "npm run prettier -- --write",
     "test": "nyc ava",
-    "format": "prettier-eslint --write '*.js' 'lib/**/*.js' 'tasks/**/*.js' 'test/**/*.js'",
     "lint": "eslint '*.js' 'lib/**/*.js' 'tasks/**/*.js' 'test/**/*.js'",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "prettier": "prettier-eslint '*.js' 'lib/**/*.js' 'tasks/**/*.js' 'test/**/*.js'"
   },
   "ava": {
     "concurrency": 5,
@@ -38,31 +40,6 @@
       "lcov",
       "text"
     ]
-  },
-  "xo": {
-    "rules": {
-      "brace-style": "off",
-      "import/order": [
-        "error",
-        {
-          "groups": [
-            [
-              "builtin",
-              "external"
-            ],
-            [
-              "internal",
-              "parent",
-              "sibling",
-              "index"
-            ]
-          ]
-        }
-      ],
-      "max-lines": "off",
-      "space-before-function-paren": "off",
-      "xo/filename-case": "off"
-    }
   },
   "dependencies": {
     "async": "^0.9.0",
