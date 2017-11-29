@@ -48,7 +48,9 @@ function register(options) {
 	let haltOnMissingDeps =
 		_.intersection(['build', 'deploy', 'watch'], options.argv._).length > 0;
 
-	doctor({haltOnMissingDeps});
+	const tasks = options.insideTests ? [] : options.argv._;
+
+	doctor({haltOnMissingDeps, tasks});
 
 	if (!options.argv['skip-update-check']) {
 		process.once('beforeExit', function() {

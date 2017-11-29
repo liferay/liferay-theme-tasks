@@ -18,7 +18,10 @@ const tempPath = path.join(
 
 test.cb.before(function(t) {
 	fs.copy(
-		path.join(__dirname, '../fixtures/json/_package_outdated_settings.json'),
+		path.join(
+			__dirname,
+			'../fixtures/json/_package_outdated_settings.json'
+		),
 		path.join(tempPath, 'package.json'),
 		function(err) {
 			if (err) throw err;
@@ -42,7 +45,7 @@ test('should throw appropriate error message', function(t) {
 	let pkg = require(path.join(__dirname, '../fixtures/json/_package.json'));
 
 	t.throws(function() {
-		doctor({themeConfig: pkg, haltOnMissingDeps: true});
+		doctor({themeConfig: pkg, haltOnMissingDeps: true, tasks: []});
 	}, 'Missing 2 theme dependencies');
 });
 
@@ -55,7 +58,7 @@ test('should look for dependencies regardless if devDependency or not', function
 	));
 
 	t.notThrows(function() {
-		doctor({themeConfig: pkg, haltOnMissingDeps: true});
+		doctor({themeConfig: pkg, haltOnMissingDeps: true, tasks: []});
 	});
 });
 
@@ -64,7 +67,7 @@ test('should replace supportCompass with rubySass', function(t) {
 
 	let pkg = require(pkgPath);
 
-	doctor({themeConfig: pkg, haltOnMissingDeps: true});
+	doctor({themeConfig: pkg, haltOnMissingDeps: true, tasks: []});
 
 	let updatedPkg = JSON.parse(fs.readFileSync(pkgPath));
 
