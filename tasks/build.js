@@ -13,13 +13,7 @@ let lfrThemeConfig = require('../lib/liferay_theme_config');
 let lookAndFeelUtil = require('../lib/look_and_feel_util');
 let themeUtil = require('../lib/util');
 
-let STR_FTL = 'ftl';
-
-let STR_VM = 'vm';
-
 let themeConfig = lfrThemeConfig.getConfig();
-
-let baseThemeGlob = getBaseThemeGlob(themeConfig.templateLanguage);
 
 let renamedFiles;
 
@@ -56,16 +50,9 @@ module.exports = function(options) {
 	});
 
 	gulp.task('build:base', function() {
-		let sourceFiles = [
-			path.join(
-				themeUtil.resolveDependency(
-					divert('dependencies').getDependencyName('unstyled')
-				),
-				baseThemeGlob
-			),
-		];
-
-		sourceFiles = getBaseThemeDependencies(process.cwd(), sourceFiles);
+		const sourceFiles = divert('dependencies').getBaseThemeDependencies(
+			process.cwd()
+		);
 
 		return gulp.src(sourceFiles).pipe(gulp.dest(pathBuild));
 	});
@@ -369,70 +356,6 @@ module.exports = function(options) {
 		}
 	}
 };
-
-function getBaseThemeDependencies(baseThemePath, dependencies) {
-	let baseThemeInfo = getLiferayThemeJSON(baseThemePath);
-
-	let baseTheme = baseThemeInfo.baseTheme;
-
-	if (_.isObject(baseTheme)) {
-		baseThemePath = path.join(
-			baseThemePath,
-			'node_modules',
-			baseTheme.name
-		);
-
-		dependencies.push(path.resolve(baseThemePath, 'src/**/*'));
-
-		return getBaseThemeDependencies(baseThemePath, dependencies);
-	} else if (baseTheme === 'styled' || baseTheme === 'classic') {
-		dependencies.splice(
-			1,
-			0,
-			path.join(
-				themeUtil.resolveDependency(
-					divert('dependencies').getDependencyName('styled')
-				),
-				baseThemeGlob
-			)
-		);
-
-		if (baseTheme === 'classic') {
-			dependencies.splice(
-				2,
-				0,
-				path.join(
-					themeUtil.resolveDependency(
-						divert('dependencies').getDependencyName('classic')
-					),
-					baseThemeGlob
-				)
-			);
-		}
-
-		return dependencies;
-	}
-
-	return dependencies;
-}
-
-function getBaseThemeGlob(templateLanguage) {
-	let glob = '**/!(package.json';
-
-	if (templateLanguage === STR_FTL) {
-		templateLanguage = STR_VM;
-	} else if (templateLanguage === STR_VM) {
-		templateLanguage = STR_FTL;
-	} else {
-		return glob + ')';
-	}
-
-	return glob + '|*.' + templateLanguage + ')';
-}
-
-function getLiferayThemeJSON(themePath) {
-	return require(path.join(themePath, 'package.json')).liferayTheme;
-}
 
 function getSassIncludePaths(rubySass) {
 	let includePaths = [
