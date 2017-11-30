@@ -6,6 +6,7 @@ const gutil = require('gulp-util');
 const _ = require('lodash');
 const path = require('path');
 
+const {createBourbonFile} = require('../../lib/bourbon_dependencies');
 const divert = require('../../lib/divert');
 const lfrThemeConfig = require('../../lib/liferay_theme_config');
 const themeUtil = require('../../lib/util');
@@ -110,6 +111,10 @@ module.exports = function(options) {
 	});
 };
 
+function concatBourbonIncludePaths(includePaths) {
+	return includePaths.concat(createBourbonFile());
+}
+
 function getSassIncludePaths(rubySass) {
 	let includePaths = [
 		themeUtil.resolveDependency(
@@ -117,7 +122,7 @@ function getSassIncludePaths(rubySass) {
 		),
 	];
 
-	includePaths = divert('build').concatBourbonIncludePaths(includePaths);
+	includePaths = concatBourbonIncludePaths(includePaths);
 
 	if (!rubySass) {
 		includePaths.push(path.dirname(require.resolve('compass-mixins')));

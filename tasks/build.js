@@ -2,6 +2,7 @@
 
 const del = require('del');
 const fs = require('fs-extra');
+const _ = require('lodash');
 const path = require('path');
 const plugins = require('gulp-load-plugins')();
 const replace = require('gulp-replace-task');
@@ -53,13 +54,11 @@ module.exports = function(options) {
 	});
 
 	gulp.task('build:fix-at-directives', function() {
-		let patterns = divert('build').getFixAtDirectivesPatterns();
-
 		return gulp
 			.src(pathBuild + '/css/*.css')
 			.pipe(
 				replace({
-					patterns: patterns,
+					patterns: getFixAtDirectivesPatterns(),
 				})
 			)
 			.pipe(gulp.dest(pathBuild + '/css'));
@@ -241,5 +240,40 @@ module.exports = function(options) {
 			.on('end', cb);
 	});
 
-	gulp.task('build:war', done => divert('build').taskWar(gulp, done));
+	gulp.task('build:war', done => {
+		runSequence.apply(this, ['plugin:version', 'plugin:war', done]);
+	});
 };
+
+function getFixAtDirectivesPatterns() {
+	let keyframeRulesReplace = function(match, m1, m2) {
+		return (
+			_.map(m1.split(','), function(item) {
+				return item.replace(/.*?(from|to|[0-9\.]+%)/g, '$1');
+			}).join(',') + m2
+		);
+	};
+
+	return [
+		{
+			match: /(@font-face|@page|@-ms-viewport)\s*({\n\s*)(.*)\s*({)/g,
+			replacement: function(match, m1, m2, m3, m4) {
+				return m3 + m2 + m1 + ' ' + m4;
+			},
+		},
+		{
+			match: /(@-ms-keyframes.*{)([\s\S]+?)(}\s})/g,
+			replacement: function(match, m1, m2, m3) {
+				m2 = m2.replace(/(.+?)(\s?{)/g, keyframeRulesReplace);
+
+				return m1 + m2 + m3;
+			},
+		},
+		{
+			match: /@import\s+url\s*\(\s*['\"]?(.+\.css)['\"]?/g,
+			replacement: function(match, m1) {
+				return '@import url(' + m1 + '?t=' + Date.now();
+			},
+		},
+	];
+}
