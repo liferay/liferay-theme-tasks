@@ -1,31 +1,23 @@
 'use strict';
 
-let _ = require('lodash');
-let del = require('del');
-let fs = require('fs-extra');
-let gutil = require('gulp-util');
-let path = require('path');
-let plugins = require('gulp-load-plugins')();
-let replace = require('gulp-replace-task');
+const del = require('del');
+const fs = require('fs-extra');
+const path = require('path');
+const plugins = require('gulp-load-plugins')();
+const replace = require('gulp-replace-task');
 
-let divert = require('../lib/divert');
-let lfrThemeConfig = require('../lib/liferay_theme_config');
-let lookAndFeelUtil = require('../lib/look_and_feel_util');
-let themeUtil = require('../lib/util');
+const divert = require('../lib/divert');
+const lfrThemeConfig = require('../lib/liferay_theme_config');
+const lookAndFeelUtil = require('../lib/look_and_feel_util');
+const themeUtil = require('../lib/util');
 
-let themeConfig = lfrThemeConfig.getConfig();
-
-let renamedFiles;
+const themeConfig = lfrThemeConfig.getConfig();
 
 module.exports = function(options) {
-	let gulp = options.gulp;
+	const {gulp, pathBuild, pathSrc} = options;
+	const {storage} = gulp;
 
-	let store = gulp.storage;
-
-	let pathBuild = options.pathBuild;
-	let pathSrc = options.pathSrc;
-
-	let runSequence = require('run-sequence').use(gulp);
+	const runSequence = require('run-sequence').use(gulp);
 
 	gulp.task('build', function(cb) {
 		runSequence(
@@ -37,7 +29,6 @@ module.exports = function(options) {
 			'build:hook',
 			'build:themelets',
 			'build:rename-css-dir',
-			'build:prep-css',
 			'build:compile-css',
 			'build:fix-url-functions',
 			'build:move-compiled-css',
@@ -59,88 +50,6 @@ module.exports = function(options) {
 
 	gulp.task('build:clean', function(cb) {
 		del([pathBuild], cb);
-	});
-
-	gulp.task('build:compile-css', function(cb) {
-		let changedFile = getSrcPathConfig().changedFile;
-
-		// During watch task, exit task early if changed file is not css
-
-		if (
-			changedFile &&
-			changedFile.type === 'changed' &&
-			!themeUtil.isCssFile(changedFile.path)
-		) {
-			cb();
-
-			return;
-		}
-
-		let compileTask = themeConfig.rubySass
-			? 'build:compile-ruby-sass'
-			: 'build:compile-lib-sass';
-
-		runSequence(compileTask, cb);
-	});
-
-	gulp.task('build:compile-lib-sass', function(cb) {
-		let gulpIf = require('gulp-if');
-		let gulpSass = themeUtil.requireDependency(
-			'gulp-sass',
-			themeConfig.version
-		);
-		let gulpSourceMaps = require('gulp-sourcemaps');
-
-		let sassOptions = getSassOptions(options.sassOptions, {
-			includePaths: getSassIncludePaths(themeConfig.rubySass),
-			sourceMap: false,
-		});
-
-		let cssBuild = pathBuild + '/_css';
-
-		let srcPath = path.join(cssBuild, '!(_)*.scss');
-
-		gulp
-			.src(srcPath)
-			.pipe(plugins.plumber())
-			.pipe(gulpIf(sassOptions.sourceMap, gulpSourceMaps.init()))
-			.pipe(gulpSass(sassOptions))
-			.on('error', handleScssError)
-			.pipe(gulpIf(sassOptions.sourceMap, gulpSourceMaps.write('.')))
-			.pipe(gulp.dest(cssBuild))
-			.on('end', cb);
-	});
-
-	gulp.task('build:compile-ruby-sass', function(cb) {
-		let gulpIf = require('gulp-if');
-		let gulpRubySass = themeUtil.requireDependency(
-			'gulp-ruby-sass',
-			themeConfig.version
-		);
-		let gulpSourceMaps = require('gulp-sourcemaps');
-
-		let sassOptions = getSassOptions(options.sassOptions, {
-			compass: true,
-			loadPath: getSassIncludePaths(themeConfig.rubySass),
-			sourcemap: false,
-		});
-
-		let cssBuild = pathBuild + '/_css';
-
-		let srcPath = path.join(cssBuild, '*.scss');
-
-		gulpRubySass(srcPath, sassOptions)
-			.pipe(gulpIf(sassOptions.sourcemap, gulpSourceMaps.init()))
-			.on('error', handleScssError)
-			.pipe(gulpIf(sassOptions.sourcemap, gulpSourceMaps.write('.')))
-			.pipe(gulp.dest(cssBuild))
-			.on('end', function() {
-				if (renamedFiles && renamedFiles.length) {
-					del(renamedFiles, cb);
-				} else {
-					cb();
-				}
-			});
 	});
 
 	gulp.task('build:fix-at-directives', function() {
@@ -306,9 +215,9 @@ module.exports = function(options) {
 
 		let vinylPaths = require('vinyl-paths');
 
-		renamedFiles = [];
+		options.renamedFiles = [];
 
-		let changeFile = store.get('changedFile');
+		let changeFile = storage.get('changedFile');
 
 		let base = changeFile ? pathSrc + '/css' : pathBuild + '/css';
 
@@ -323,7 +232,7 @@ module.exports = function(options) {
 			)
 			.pipe(
 				vinylPaths(function(path, done) {
-					renamedFiles.push(path);
+					options.renamedFiles.push(path);
 
 					done();
 				})
@@ -333,48 +242,4 @@ module.exports = function(options) {
 	});
 
 	gulp.task('build:war', done => divert('build').taskWar(gulp, done));
-
-	function getSrcPathConfig() {
-		return {
-			changedFile: store.get('changedFile'),
-			deployed: store.get('deployed'),
-			version: themeConfig.version,
-		};
-	}
-
-	function handleScssError(err) {
-		if (options.watching) {
-			gutil.log(err);
-
-			this.emit('end');
-		} else {
-			throw err;
-		}
-	}
 };
-
-function getSassIncludePaths(rubySass) {
-	let includePaths = [
-		themeUtil.resolveDependency(
-			divert('dependencies').getDependencyName('mixins')
-		),
-	];
-
-	includePaths = divert('build').concatBourbonIncludePaths(includePaths);
-
-	if (!rubySass) {
-		includePaths.push(path.dirname(require.resolve('compass-mixins')));
-	}
-
-	return includePaths;
-}
-
-function getSassOptions(sassOptions, defaults) {
-	if (_.isFunction(sassOptions)) {
-		sassOptions = sassOptions(defaults);
-	} else {
-		sassOptions = _.assign(defaults, sassOptions);
-	}
-
-	return sassOptions;
-}
