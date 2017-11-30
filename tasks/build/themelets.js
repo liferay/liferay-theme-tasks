@@ -6,8 +6,8 @@ let path = require('path');
 let plugins = require('gulp-load-plugins')();
 let vinylPaths = require('vinyl-paths');
 
-let divert = require('../lib/divert');
-let lfrThemeConfig = require('../lib/liferay_theme_config');
+let divert = require('../../lib/divert');
+let lfrThemeConfig = require('../../lib/liferay_theme_config');
 
 let gutil = plugins.util;
 
