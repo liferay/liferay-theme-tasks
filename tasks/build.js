@@ -272,10 +272,6 @@ module.exports = function(options) {
 		});
 	});
 
-	gulp.task('build:prep-css', done =>
-		divert('build').taskPrepCss(gulp, done)
-	);
-
 	gulp.task('build:move-compiled-css', function() {
 		return gulp
 			.src(pathBuild + '/_css/**/*')
