@@ -209,37 +209,6 @@ module.exports = function(options) {
 		fs.rename(pathBuild + '/css', pathBuild + '/_css', cb);
 	});
 
-	gulp.task('build:rename-css-files', function(cb) {
-		let cssBuild = pathBuild + '/_css';
-
-		let vinylPaths = require('vinyl-paths');
-
-		options.renamedFiles = [];
-
-		let changeFile = storage.get('changedFile');
-
-		let base = changeFile ? pathSrc + '/css' : pathBuild + '/css';
-
-		gulp
-			.src(path.join(cssBuild, '**/*.css'), {
-				base: base,
-			})
-			.pipe(
-				plugins.rename({
-					extname: '.scss',
-				})
-			)
-			.pipe(
-				vinylPaths(function(path, done) {
-					options.renamedFiles.push(path);
-
-					done();
-				})
-			)
-			.pipe(gulp.dest(cssBuild))
-			.on('end', cb);
-	});
-
 	gulp.task('build:war', done => {
 		runSequence.apply(this, ['plugin:version', 'plugin:war', done]);
 	});

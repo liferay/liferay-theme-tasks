@@ -101,13 +101,7 @@ module.exports = function(options) {
 			.on('error', handleScssError)
 			.pipe(gulpIf(sassOptions.sourcemap, gulpSourceMaps.write('.')))
 			.pipe(gulp.dest(cssBuild))
-			.on('end', function() {
-				if (options.renamedFiles && options.renamedFiles.length) {
-					del(options.renamedFiles, cb);
-				} else {
-					cb();
-				}
-			});
+			.on('end', cb);
 	});
 };
 
